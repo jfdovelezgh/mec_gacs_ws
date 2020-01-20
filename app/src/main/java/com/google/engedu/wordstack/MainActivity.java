@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 import java.util.Stack;
 
@@ -58,9 +59,8 @@ public class MainActivity extends AppCompatActivity {
             String line = null;
             while((line = in.readLine()) != null) {
                 String word = line.trim();
-                /**
-                 **  YOUR CODE GOES HERE
-                 **/
+
+                /** **  YOUR CODE GOES HERE **/
                 if( word.length() == WORD_LENGTH ) {
                     words.add(word);
                 }
@@ -136,7 +136,6 @@ public class MainActivity extends AppCompatActivity {
                     /**
                      **
                      **  YOUR CODE GOES HERE
-                     **
                      **/
                     return true;
             }
@@ -144,14 +143,54 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private String mergeWithMap(String str1, String str2) {
+        // create scrambled string builder (we can easily append to this data structure
+        StringBuilder scrambled = new StringBuilder();
+
+        // create hashMap with our two words as keys and a counter as we go through the letters for each
+        HashMap<String, Integer> myWords = new HashMap<String, Integer>();
+        myWords.put(str1, 0);
+        myWords.put(str2, 0);
+
+        // loop through all letters of both words (WORD_LENGTH * 2)
+        for( int i = 0; i < WORD_LENGTH*2 ; i++) {
+
+            // randomly pick one of our 2 words
+            String pickedWord = random.nextBoolean() ? word1 : word2;
+
+            // if we've used all letters in the picked word already, switch to the other word
+            if(myWords.get(pickedWord) >= WORD_LENGTH) {
+                pickedWord = (pickedWord == word1) ? word2 : word1;
+            }
+
+            // get the count of letters left in the picked word
+            int pickedNextLetter = myWords.get(pickedWord);
+
+            Log.d(OURTAG, String.format("picked word is %s, next letter in it is %d", pickedWord, pickedNextLetter));
+
+            // add the next letter of picked word to scrambled string and increase picked word's letter counter
+            scrambled.append(pickedWord.charAt(pickedNextLetter));
+            myWords.put(pickedWord, ++pickedNextLetter);
+        }
+
+        Log.d(OURTAG, String.format("scrambled string is %s", scrambled.toString()));
+
+        return scrambled.toString();
+    }
+
     public boolean onStartGame(View view) {
         TextView messageBox = (TextView) findViewById(R.id.message_box);
         messageBox.setText("Game started");
-        /**
-         **
-         **  YOUR CODE GOES HERE
-         **
-         **/
+
+        /** ** **  YOUR CODE GOES HERE ** **/
+        // first grab a couple of random words
+        word1 = words.get(random.nextInt(words.size()));
+        Log.d(OURTAG, String.format("first random word is %s", word1));
+        word2 = words.get(random.nextInt(words.size()));
+        Log.d(OURTAG, String.format("second random word is %s", word2));
+
+        messageBox.setText(mergeWithMap(word1, word2));
+
         return true;
     }
 
