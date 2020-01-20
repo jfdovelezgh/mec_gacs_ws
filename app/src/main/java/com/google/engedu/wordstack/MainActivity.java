@@ -19,6 +19,7 @@ import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int WORD_LENGTH = 5;
     public static final int LIGHT_BLUE = Color.rgb(176, 200, 255);
     public static final int LIGHT_GREEN = Color.rgb(200, 255, 200);
+    private static final String OURTAG = "GACS_WS";
     private ArrayList<String> words = new ArrayList<>();
     private Random random = new Random();
     private StackedLayout stackedLayout;
@@ -57,11 +59,13 @@ public class MainActivity extends AppCompatActivity {
             while((line = in.readLine()) != null) {
                 String word = line.trim();
                 /**
-                 **
                  **  YOUR CODE GOES HERE
-                 **
                  **/
+                if( word.length() == WORD_LENGTH ) {
+                    words.add(word);
+                }
             }
+            Log.d(OURTAG, String.format("Loaded %d words from words.txt", words.size()));
         } catch (IOException e) {
             Toast toast = Toast.makeText(this, "Could not load dictionary", Toast.LENGTH_LONG);
             toast.show();
