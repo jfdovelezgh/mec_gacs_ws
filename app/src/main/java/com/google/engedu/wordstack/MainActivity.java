@@ -24,6 +24,7 @@ import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -90,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
                 LetterTile tile = (LetterTile) stackedLayout.peek();
                 tile.moveToViewGroup((ViewGroup) v);
                 if (stackedLayout.empty()) {
+                    Log.d(OURTAG, "in onTouch with empty stackedLayout");
                     TextView messageBox = (TextView) findViewById(R.id.message_box);
                     messageBox.setText(word1 + " " + word2);
                 }
@@ -166,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
             // get the count of letters left in the picked word
             int pickedNextLetter = myWords.get(pickedWord);
 
-            Log.d(OURTAG, String.format("picked word is %s, next letter in it is %d", pickedWord, pickedNextLetter));
+//            Log.d(OURTAG, String.format("picked word is %s, next letter in it is %d", pickedWord, pickedNextLetter));
 
             // add the next letter of picked word to scrambled string and increase picked word's letter counter
             scrambled.append(pickedWord.charAt(pickedNextLetter));
@@ -183,11 +185,25 @@ public class MainActivity extends AppCompatActivity {
         messageBox.setText("Game started");
 
         /** ** **  YOUR CODE GOES HERE ** **/
-        // first grab a couple of random words
+        // reset the game if it's been played already
+        Log.d(OURTAG, "resetting game...");
+
+        ViewGroup word1LinearLayout = findViewById(R.id.word1);
+        if(word1LinearLayout.getChildCount() > 0 ) {
+            word1LinearLayout.removeAllViews();
+        }
+
+        ViewGroup word2LinearLayout = findViewById(R.id.word2);
+        if(word2LinearLayout.getChildCount() > 0 ) {
+            word2LinearLayout.removeAllViews();
+        }
+
+        stackedLayout.clear();
+
+        // grab a couple of random words
         word1 = words.get(random.nextInt(words.size()));
-        Log.d(OURTAG, String.format("first random word is %s", word1));
         word2 = words.get(random.nextInt(words.size()));
-        Log.d(OURTAG, String.format("second random word is %s", word2));
+        Log.d(OURTAG, String.format("random words are %s and %s", word1, word2));
 
         String combinedWords = mergeWithMap(word1, word2);
         messageBox.setText(combinedWords);
