@@ -189,7 +189,17 @@ public class MainActivity extends AppCompatActivity {
         word2 = words.get(random.nextInt(words.size()));
         Log.d(OURTAG, String.format("second random word is %s", word2));
 
-        messageBox.setText(mergeWithMap(word1, word2));
+        String combinedWords = mergeWithMap(word1, word2);
+        messageBox.setText(combinedWords);
+
+        // for every letter in combinedWords, in reverse order...
+        for( int i = combinedWords.length()-1; i >= 0; i--){
+            // create a tile for the next letter...
+            LetterTile tile = new LetterTile(this, combinedWords.charAt(i));
+
+            // ...and push it onto stackedLayout
+            stackedLayout.push(tile);
+        }
 
         return true;
     }
