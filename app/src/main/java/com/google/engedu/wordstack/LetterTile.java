@@ -18,6 +18,7 @@ package com.google.engedu.wordstack;
 import android.content.ClipData;
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,7 @@ public class LetterTile extends TextView {
     public static final int TILE_SIZE = 150;
     private Character letter;
     private boolean frozen;
+    private static final String OURTAG = "GACS_WS";
 
     public LetterTile(Context context, Character letter) {
         super(context);
@@ -68,11 +70,12 @@ public class LetterTile extends TextView {
 
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
-        /**
-         **
-         **  YOUR CODE GOES HERE
-         **
-         **/
+        /** ** **  YOUR CODE GOES HERE ** **/
+        if( !frozen && motionEvent.getAction() == motionEvent.ACTION_DOWN ) {
+            Log.d(OURTAG, String.format("Tile not frozen and motionEvent is ACTION_DOWN"));
+            startDrag(ClipData.newPlainText("", ""), new View.DragShadowBuilder(this), this, 0);
+            return true;
+        }
         return super.onTouchEvent(motionEvent);
     }
 }

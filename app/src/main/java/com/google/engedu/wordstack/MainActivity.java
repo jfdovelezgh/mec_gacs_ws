@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private Random random = new Random();
     private StackedLayout stackedLayout;
     private String word1, word2;
+    private Stack<LetterTile> placedTiles = new Stack<LetterTile>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,11 +96,8 @@ public class MainActivity extends AppCompatActivity {
                     TextView messageBox = (TextView) findViewById(R.id.message_box);
                     messageBox.setText(word1 + " " + word2);
                 }
-                /**
-                 **
-                 **  YOUR CODE GOES HERE
-                 **
-                 **/
+                /** ** **  YOUR CODE GOES HERE ** **/
+                placedTiles.push(tile);
                 return true;
             }
             return false;
@@ -188,11 +186,12 @@ public class MainActivity extends AppCompatActivity {
         // reset the game if it's been played already
         Log.d(OURTAG, "resetting game...");
 
+        // reset the word1 ViewGroup
         ViewGroup word1LinearLayout = findViewById(R.id.word1);
         if(word1LinearLayout.getChildCount() > 0 ) {
             word1LinearLayout.removeAllViews();
         }
-
+        // reset the word2 ViewGroup
         ViewGroup word2LinearLayout = findViewById(R.id.word2);
         if(word2LinearLayout.getChildCount() > 0 ) {
             word2LinearLayout.removeAllViews();
@@ -221,11 +220,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public boolean onUndo(View view) {
-        /**
-         **
-         **  YOUR CODE GOES HERE
-         **
-         **/
+        /** ** **  YOUR CODE GOES HERE ** **/
+        LetterTile tile = placedTiles.pop();
+        tile.moveToViewGroup((ViewGroup) stackedLayout);
         return true;
     }
 }
