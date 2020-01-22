@@ -72,7 +72,6 @@ public class LetterTile extends TextView {
     public boolean onTouchEvent(MotionEvent motionEvent) {
         /** ** **  YOUR CODE GOES HERE ** **/
         if( !frozen && motionEvent.getAction() == motionEvent.ACTION_DOWN ) {
-            Log.d(OURTAG, String.format("Tile not frozen and motionEvent is ACTION_DOWN"));
             startDrag(ClipData.newPlainText("", ""), new View.DragShadowBuilder(this), this, 0);
             return true;
         }

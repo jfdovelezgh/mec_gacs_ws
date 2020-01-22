@@ -92,9 +92,11 @@ public class MainActivity extends AppCompatActivity {
                 LetterTile tile = (LetterTile) stackedLayout.peek();
                 tile.moveToViewGroup((ViewGroup) v);
                 if (stackedLayout.empty()) {
-                    Log.d(OURTAG, "in onTouch with empty stackedLayout");
-                    TextView messageBox = (TextView) findViewById(R.id.message_box);
-                    messageBox.setText(word1 + " " + word2);
+                    ViewGroup w1 = findViewById(R.id.word1);
+                    String usrWord1 = getUserWord(w1);
+                    ViewGroup w2 = findViewById(R.id.word2);
+                    String usrWord2 = getUserWord(w2);
+                    validateAndShowWords(usrWord1, usrWord2);
                 }
                 /** ** **  YOUR CODE GOES HERE ** **/
                 placedTiles.push(tile);
@@ -130,8 +132,16 @@ public class MainActivity extends AppCompatActivity {
                     LetterTile tile = (LetterTile) event.getLocalState();
                     tile.moveToViewGroup((ViewGroup) v);
                     if (stackedLayout.empty()) {
-                        TextView messageBox = (TextView) findViewById(R.id.message_box);
-                        messageBox.setText(word1 + " " + word2);
+                        // grab the words the user put into the boxes
+                        ViewGroup w1 = findViewById(R.id.word1);
+                        String usrWord1 = getUserWord(w1);
+                        ViewGroup w2 = findViewById(R.id.word2);
+                        String usrWord2 = getUserWord(w2);
+
+                        Log.d(OURTAG, String.format("user entered %s and %s", usrWord1, usrWord2));
+
+                        // if they're valid words we show them in the messageBox
+                        validateAndShowWords(usrWord1, usrWord2);
                     }
                     /** ** **  YOUR CODE GOES HERE **/
                     placedTiles.push(tile);
@@ -139,6 +149,33 @@ public class MainActivity extends AppCompatActivity {
             }
             return false;
         }
+    }
+
+    private String getUserWord(ViewGroup v) {
+        String result = new String();
+        char usrWord[] = new char[WORD_LENGTH];
+
+        // get letters from the word1 ViewGroup onto result
+        for( int i = 0; i < v.getChildCount(); i++ ) {
+            TextView tile = (TextView) v.getChildAt(i);
+            usrWord[i] = tile.getText().charAt(0);
+            result = new String(usrWord);
+        }
+
+        return result;
+    }
+
+    private boolean validateAndShowWords(String userWord1, String userWord2) {
+        TextView messageBox = (TextView) findViewById(R.id.message_box);
+
+        // check to see if user's words are valid (even if not the ones we used to scramble)
+        if( words.contains(userWord1) && words.contains(userWord2)) {
+            messageBox.setText("Winner, winner, chicken diner!! " + userWord1 + " and " + userWord2 + " are correct!");
+        } else {
+            messageBox.setText("nope, try again");
+        }
+
+        return true;
     }
 
     private String mergeWithMap(String str1, String str2) {
@@ -178,10 +215,10 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean onStartGame(View view) {
         TextView messageBox = (TextView) findViewById(R.id.message_box);
-        messageBox.setText("Game started");
 
         /** ** **  YOUR CODE GOES HERE ** **/
         // reset the game if it's been played already
+        messageBox.setText("Resetting game...");
         Log.d(OURTAG, "resetting game...");
 
         // reset the word1 ViewGroup
@@ -203,7 +240,6 @@ public class MainActivity extends AppCompatActivity {
         Log.d(OURTAG, String.format("random words are %s and %s", word1, word2));
 
         String combinedWords = mergeWithMap(word1, word2);
-        messageBox.setText(combinedWords);
 
         // for every letter in combinedWords, in reverse order...
         for( int i = combinedWords.length()-1; i >= 0; i--){
@@ -214,13 +250,16 @@ public class MainActivity extends AppCompatActivity {
             stackedLayout.push(tile);
         }
 
+        messageBox.setText("Game started");
         return true;
     }
 
     public boolean onUndo(View view) {
         /** ** **  YOUR CODE GOES HERE ** **/
-        LetterTile tile = placedTiles.pop();
-        tile.moveToViewGroup((ViewGroup) stackedLayout);
+        if(!placedTiles.empty()){
+            LetterTile tile = placedTiles.pop();
+            tile.moveToViewGroup((ViewGroup) stackedLayout);
+        }
         return true;
     }
 }
