@@ -171,6 +171,8 @@ public class MainActivity extends AppCompatActivity {
         // check to see if user's words are valid (even if not the ones we used to scramble)
         if( words.contains(userWord1) && words.contains(userWord2)) {
             messageBox.setText("Winner, winner, chicken diner!! " + userWord1 + " and " + userWord2 + " are correct!");
+            Toast toast = Toast.makeText(this, "We have a winner!!", Toast.LENGTH_LONG);
+            toast.show();
         } else {
             messageBox.setText("nope, try again");
         }

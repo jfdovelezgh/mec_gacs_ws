@@ -47,7 +47,7 @@ public class StackedLayout extends LinearLayout {
         if(!tiles.empty()) {
             popped = tiles.pop();
             this.removeView(popped);
-//            Log.d(OURTAG, String.format("POPing from tiles; empty? %b", tiles.empty()));
+//            Log.d(OURTAG, String.format("POPPing from tiles; empty? %b", tiles.empty()));
             if(!tiles.empty()) this.addView(tiles.peek());
         }
         return popped;
